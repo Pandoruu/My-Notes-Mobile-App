@@ -1,16 +1,18 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
+    id("androidx.navigation.safeargs.kotlin") version "2.7.7"
 }
 
 android {
     namespace = "com.example.mynotes"
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.mynotes"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -33,6 +35,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -45,4 +50,17 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    val roomVersion = "2.7.2"
+
+    implementation("androidx.room:room-runtime:$roomVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
+
+    val nav_version = "2.9.3"
+    // Navigation
+    implementation("androidx.navigation:navigation-fragment-ktx:${nav_version}")
+    implementation("androidx.navigation:navigation-ui-ktx:${nav_version}")
+
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
 }
