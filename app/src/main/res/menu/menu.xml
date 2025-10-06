@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/notesNav"
+        android:title="Notes"
+        android:icon="@drawable/ic_note"
+        android:enabled="true"
+        />
+    <item
+        android:id="@+id/calendarNav"
+        android:title="Calendar"
+        android:icon="@drawable/ic_calendar"
+        android:enabled="true"
+        />
+    <item
+        android:id="@+id/searchNav"
+        android:title="Search"
+        android:icon="@drawable/ic_search"
+        android:enabled="true"
+        />
+</menu>
