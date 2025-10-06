@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">My Notes</string>
+    <string-array name="Category">
+        <item>C1</item>
+        <item>C2</item>
+        <item>C3</item>
+    </string-array>
 </resources>
