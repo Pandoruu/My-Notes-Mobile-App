@@ -1,10 +1,11 @@
 package com.example.mynotes.database.viewmodel
 import androidx.lifecycle.*
-import com.example.mynotes.database.NotesRepository
+import com.example.mynotes.database.repo.NotesRepository
 import com.example.mynotes.database.table.*
 import kotlinx.coroutines.launch
 
 class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
+
 
     // USER
     fun observeUserById(userId: Int): LiveData<User?> =
@@ -26,7 +27,6 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun deleteUser(user: User) {
         viewModelScope.launch { repository.deleteUser(user) }
     }
-
     // CATEGORY
     fun observeCategories(userId: Int): LiveData<List<Category>> =
         repository.observeCategoriesByUser(userId)
@@ -44,7 +44,6 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun deleteCategory(category: Category) {
         viewModelScope.launch { repository.deleteCategory(category) }
     }
-
     // NOTES
     fun observeActiveNotes(userId: Int): LiveData<List<Note>> =
         repository.observeActiveNotes(userId)
@@ -54,6 +53,16 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
 
     fun searchNotes(userId: Int, query: String): LiveData<List<Note>> =
         repository.observeSearchNotes(userId, query)
+
+    fun observeNoteById(noteId: Int): LiveData<Note?> =
+        repository.observeNoteById(noteId)
+
+    fun observeAllNotes(userId: Int): LiveData<List<Note>> =
+        repository.observeAllNotes(userId)
+
+    fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>> =
+        repository.observeNotesByCategory(userId, categoryName)
+
 
     fun addNote(
         userId: Int,

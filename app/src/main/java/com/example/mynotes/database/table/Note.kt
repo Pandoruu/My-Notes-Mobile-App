@@ -1,5 +1,6 @@
 package com.example.mynotes.database.table
 
+import androidx.fragment.app.Fragment
 import androidx.room.*
 import java.util.Date
 

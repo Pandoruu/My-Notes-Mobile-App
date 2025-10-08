@@ -11,5 +11,8 @@ interface CategoryDao {
     @Delete suspend fun delete(category: Category)
 
     @Query("SELECT * FROM categories WHERE user_id = :userId")
-    fun getUser(userId: Int): LiveData<List<Category>>
+    fun observeByUser(userId: Int): LiveData<List<Category>>
+
+    @Query("SELECT * FROM categories WHERE user_id = :userId AND name = :name LIMIT 1")
+    suspend fun getCategoryByNameOnce(userId: Int, name: String): Category?
 }

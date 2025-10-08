@@ -1,7 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/nav_graph"
-            app:startDestination="@id/notesNav">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/notesNav">
 
+    <!-- NotesFragment -->
+    <fragment
+        android:id="@+id/notesNav"
+        android:name="com.example.mynotes.view.ui.home.NotesFragment"
+        android:label="NotesFragment">
+
+        <!-- Điều hướng đến ViewNoteFragment -->
+        <action
+            android:id="@+id/action_notesNav_to_viewNoteFragment"
+            app:destination="@id/viewNoteFragment" />
+    </fragment>
+
+    <!-- CalendarFragment -->
+    <fragment
+        android:id="@+id/calendarNav"
+        android:name="com.example.mynotes.view.ui.calendar.CalendarFragment"
+        android:label="CalendarFragment" />
+
+    <!-- SearchFragment -->
+    <fragment
+        android:id="@+id/searchNav"
+        android:name="com.example.mynotes.view.ui.search.SearchFragment"
+        android:label="SearchFragment" />
+
+    <!-- ViewNoteFragment -->
+    <fragment
+        android:id="@+id/viewNoteFragment"
+        android:name="com.example.mynotes.view.ui.view_note.ViewNoteFragment"
+        android:label="ViewNoteFragment">
+
+        <argument
+            android:name="noteId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="com.example.mynotes.view.ui.favorite.FavoriteFragment"
+        android:label="FavoriteFragment" />
+    <fragment
+        android:id="@+id/trashFragment"
+        android:name="com.example.mynotes.view.ui.trash.TrashFragment"
+        android:label="TrashFragment" />
 </navigation>
