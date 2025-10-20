@@ -50,4 +50,6 @@ class NotesRepository(
 
     fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>> =
         noteDao.observeNotesByCategory(userId, categoryName)
+//    fun observeFavoriteNotes(userId: Int) =
+//        noteDao.observeFavoriteNotes(userId)
 }

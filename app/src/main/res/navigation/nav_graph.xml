@@ -10,10 +10,18 @@
         android:name="com.example.mynotes.view.ui.home.NotesFragment"
         android:label="NotesFragment">
 
-        <!-- Điều hướng đến ViewNoteFragment -->
         <action
             android:id="@+id/action_notesNav_to_viewNoteFragment"
             app:destination="@id/viewNoteFragment" />
+        <action
+            android:id="@+id/action_notesNav_to_trashFragment"
+            app:destination="@id/trashFragment" />
+        <action
+            android:id="@+id/action_notesNav_to_favoriteFragment"
+            app:destination="@id/favoriteFragment" />
+        <action
+            android:id="@+id/action_notesNav_to_categoryFragment"
+            app:destination="@id/categoryFragment" />
     </fragment>
 
     <!-- CalendarFragment -->
@@ -48,4 +56,8 @@
         android:id="@+id/trashFragment"
         android:name="com.example.mynotes.view.ui.trash.TrashFragment"
         android:label="TrashFragment" />
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.mynotes.view.ui.category.CategoryFragment"
+        android:label="CategoryFragment" />
 </navigation>

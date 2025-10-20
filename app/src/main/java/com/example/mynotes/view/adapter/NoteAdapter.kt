@@ -1,14 +1,13 @@
 package com.example.mynotes.view.adapter
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynotes.R
 import com.example.mynotes.database.table.Note
 import com.example.mynotes.databinding.ItemNoteBinding
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class NoteAdapter(
     private val onClick: (Note) -> Unit
@@ -17,8 +16,10 @@ class NoteAdapter(
     inner class NoteViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(note: Note){
             binding.title.text = note.title
-            //binding.date.text = note.updatedAt.toString()
             binding.detail.text = note.detail
+            val formattedDate = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+                .format(note.updatedAt)
+            binding.date.text = formattedDate
 
             binding.root.setOnClickListener { onClick(note) }
         }

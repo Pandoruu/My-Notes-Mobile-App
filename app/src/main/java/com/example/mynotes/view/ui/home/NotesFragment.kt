@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.mynotes.R
 import com.example.mynotes.database.DatabaseInit
 import com.example.mynotes.database.repo.NotesRepository
 import com.example.mynotes.database.viewmodel.NotesViewModel
@@ -37,7 +39,6 @@ class NotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Khởi tạo DB và ViewModel
         val db = DatabaseInit.getDatabase(requireContext())
         val repo = NotesRepository(
             userDao = db.userDao(),
@@ -50,31 +51,29 @@ class NotesFragment : Fragment() {
             NotesViewModel.NotesViewModelFactory(repo)
         )[NotesViewModel::class.java]
 
-        // Cài đặt RecyclerView
         adapter = NoteAdapter { note ->
-            // Khi click vào 1 note → mở ViewNoteFragment để xem/sửa note
             val action = NotesFragmentDirections.actionNotesNavToViewNoteFragment(note.id)
             findNavController().navigate(action)
         }
-        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerView.adapter = adapter
 
-        // Thiết lập các tab và quan sát dữ liệu
         setupTabs()
 
-        // Nút thêm note
         binding.btnAdd.setOnClickListener {
-            // -1 để biểu thị tạo note mới
+            // -1 để tạo note mới
             val action = NotesFragmentDirections.actionNotesNavToViewNoteFragment(-1)
             findNavController().navigate(action)
         }
 
         // Mặc định hiển thị tab "All"
         loadAllNotes()
+
+        setUpHamburgerMenu()
+
     }
 
     private fun setupTabs() {
-        // Quan sát danh sách category
         viewModel.observeCategories(currentUserId).observe(viewLifecycleOwner) { categories ->
             binding.tabLayout.removeAllTabs()
 
@@ -82,16 +81,17 @@ class NotesFragment : Fragment() {
             val allTab = binding.tabLayout.newTab().setText("All")
             binding.tabLayout.addTab(allTab)
 
-            // Thêm các tab theo Category
+            // Thêm các tab khác
             for (cat in categories) {
-                binding.tabLayout.addTab(binding.tabLayout.newTab().setText(cat.name))
+                if (cat.name != "All") {
+                    binding.tabLayout.addTab(binding.tabLayout.newTab().setText(cat.name))
+                }
             }
 
             // Mặc định chọn All
             binding.tabLayout.selectTab(allTab)
         }
 
-        // Lắng nghe sự kiện khi người dùng chọn tab
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val tabName = tab?.text.toString()
@@ -104,6 +104,7 @@ class NotesFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
+
 
     // Load tất cả notes
     private fun loadAllNotes() {
@@ -118,6 +119,32 @@ class NotesFragment : Fragment() {
             .observe(viewLifecycleOwner) { notes ->
                 adapter.submitList(notes)
             }
+    }
+
+    private fun setUpHamburgerMenu() {
+        binding.btnHamburger.setOnClickListener { view ->
+            val popup = PopupMenu(requireContext(), view)
+            popup.menuInflater.inflate(R.menu.hamburger_menu, popup.menu)
+
+            popup.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.menu_favorite -> {
+                        findNavController().navigate(R.id.action_notesNav_to_favoriteFragment)
+                        true
+                    }
+                    R.id.menu_trash -> {
+                        findNavController().navigate(R.id.action_notesNav_to_trashFragment)
+                        true
+                    }
+                    R.id.menu_category -> {
+                        findNavController().navigate(R.id.action_notesNav_to_categoryFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popup.show()
+        }
     }
 
     override fun onDestroyView() {

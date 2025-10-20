@@ -35,4 +35,8 @@ interface NoteDao {
 
     @Query("SELECT * FROM notes WHERE user_id = :userId")
     suspend fun getAllNotesOnce(userId: Int): List<Note>
+
+//    @Query("SELECT * FROM notes WHERE user_id = :userId AND is_favorite = 1 AND is_trashed = 0 ORDER BY updated_at DESC")
+//    fun observeFavoriteNotes(userId: Int): LiveData<List<Note>>
+
 }

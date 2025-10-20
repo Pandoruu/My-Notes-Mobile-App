@@ -15,6 +15,7 @@ import com.example.mynotes.database.repo.NotesRepository
 import com.example.mynotes.database.table.Note
 import com.example.mynotes.database.viewmodel.NotesViewModel
 import com.example.mynotes.databinding.FragmentViewNoteBinding
+import java.util.Date
 
 class ViewNoteFragment : Fragment() {
 
@@ -65,13 +66,10 @@ class ViewNoteFragment : Fragment() {
             }
         }
 
-        // Thiết lập Spinner category
         setupCategorySpinner()
 
-        // Nút lưu
         binding.btnSave.setOnClickListener { saveNote() }
 
-        // Nút xóa
         binding.topLayout.findViewById<ImageView>(R.id.btn_trash_bin)?.setOnClickListener {
             currentNote?.let {
                 viewModel.moveNoteToTrash(it)
@@ -87,8 +85,10 @@ class ViewNoteFragment : Fragment() {
 
     private fun setupCategorySpinner() {
         viewModel.observeCategories(userId).observe(viewLifecycleOwner) { categories ->
-            val categoryNames = mutableListOf("All")
-            categoryNames.addAll(categories.map { it.name })
+            val categoryNames = mutableListOf<String>().apply {
+                addAll(categories.map { it.name })
+            }
+
 
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -98,13 +98,11 @@ class ViewNoteFragment : Fragment() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinner.adapter = adapter
 
-            // chọn sẵn
             currentNote?.categoryId?.let { cid ->
                 val pos = categories.indexOfFirst { it.id == cid } + 1
                 if (pos >= 0) binding.spinner.setSelection(pos)
             }
 
-            // Chọn category
             binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -129,8 +127,7 @@ class ViewNoteFragment : Fragment() {
             return
         }
 
-        if (currentNote == null) {
-            // Tạo mới
+        if (currentNote == null) { // Tạo mới
             viewModel.addNote(
                 userId = userId,
                 categoryId = selectedCategoryId,
@@ -138,12 +135,12 @@ class ViewNoteFragment : Fragment() {
                 detail = detail
             )
             Toast.makeText(requireContext(), "Note created", Toast.LENGTH_SHORT).show()
-        } else {
-            // Cập nhật
+        } else { // Cập nhật
             val updated = currentNote!!.copy(
                 title = title,
                 detail = detail,
-                categoryId = selectedCategoryId
+                categoryId = selectedCategoryId,
+                updatedAt = Date()
             )
             viewModel.updateNote(updated)
             Toast.makeText(requireContext(), "Note updated", Toast.LENGTH_SHORT).show()
