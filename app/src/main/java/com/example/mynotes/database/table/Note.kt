@@ -1,5 +1,6 @@
 package com.example.mynotes.database.table
 
+import androidx.fragment.app.Fragment
 import androidx.room.*
 import java.util.Date
 
@@ -29,6 +30,7 @@ data class Note(
     @ColumnInfo(name = "detail") val detail: String? = null,
     @ColumnInfo(name = "title_plain") val titlePlain: String? = null,
     @ColumnInfo(name = "detail_plain") val detailPlain: String? = null,
+//    @ColumnInfo(name = "is_favorite") val isFavorite: Boolean = false,
     @ColumnInfo(name = "is_pinned") val isPinned: Boolean = false,
     @ColumnInfo(name = "is_trashed") val isTrashed: Boolean = false,
     @ColumnInfo(name = "trashed_at") val trashedAt: Date? = null,

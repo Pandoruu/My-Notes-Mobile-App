@@ -16,8 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="16dp"
-            android:scaleX="2"
-            android:scaleY="2"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
             android:layout_marginVertical="8dp"
             android:src="@drawable/ic_back"
             />

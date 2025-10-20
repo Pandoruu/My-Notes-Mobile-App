@@ -15,4 +15,8 @@ interface UserDao {
 
     @Query("SELECT * FROM users")
     fun observeAllUsers(): LiveData<List<User>>
+
+    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
+    suspend fun getUserByUsernameOnce(username: String): User?
+
 }

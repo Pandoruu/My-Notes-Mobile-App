@@ -1,8 +1,12 @@
-package com.example.mynotes.database
+package com.example.mynotes.database.repo
 
-import com.example.mynotes.database.dao.*
-import com.example.mynotes.database.table.*
 import androidx.lifecycle.LiveData
+import com.example.mynotes.database.dao.CategoryDao
+import com.example.mynotes.database.dao.NoteDao
+import com.example.mynotes.database.dao.UserDao
+import com.example.mynotes.database.table.Category
+import com.example.mynotes.database.table.Note
+import com.example.mynotes.database.table.User
 
 class NotesRepository(
     private val userDao: UserDao,
@@ -38,4 +42,14 @@ class NotesRepository(
 
     fun observeSearchNotes(userId: Int, query: String): LiveData<List<Note>> =
         noteDao.observeSearchNotes(userId, query)
+
+    fun observeNoteById(noteId: Int): LiveData<Note?> =
+        noteDao.observeNoteById(noteId)
+
+    fun observeAllNotes(userId: Int): LiveData<List<Note>> = noteDao.observeAllNotes(userId)
+
+    fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>> =
+        noteDao.observeNotesByCategory(userId, categoryName)
+//    fun observeFavoriteNotes(userId: Int) =
+//        noteDao.observeFavoriteNotes(userId)
 }

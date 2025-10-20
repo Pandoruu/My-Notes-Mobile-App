@@ -1,10 +1,12 @@
 package com.example.mynotes.database.viewmodel
 import androidx.lifecycle.*
-import com.example.mynotes.database.NotesRepository
+import com.example.mynotes.database.repo.NotesRepository
 import com.example.mynotes.database.table.*
 import kotlinx.coroutines.launch
+import java.util.Date
 
 class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
+
 
     // USER
     fun observeUserById(userId: Int): LiveData<User?> =
@@ -26,7 +28,6 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun deleteUser(user: User) {
         viewModelScope.launch { repository.deleteUser(user) }
     }
-
     // CATEGORY
     fun observeCategories(userId: Int): LiveData<List<Category>> =
         repository.observeCategoriesByUser(userId)
@@ -44,16 +45,23 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun deleteCategory(category: Category) {
         viewModelScope.launch { repository.deleteCategory(category) }
     }
-
     // NOTES
-    fun observeActiveNotes(userId: Int): LiveData<List<Note>> =
-        repository.observeActiveNotes(userId)
 
     fun observeTrashedNotes(userId: Int): LiveData<List<Note>> =
         repository.observeTrashedNotes(userId)
 
     fun searchNotes(userId: Int, query: String): LiveData<List<Note>> =
         repository.observeSearchNotes(userId, query)
+
+    fun observeNoteById(noteId: Int): LiveData<Note?> =
+        repository.observeNoteById(noteId)
+
+    fun observeAllNotes(userId: Int): LiveData<List<Note>> =
+        repository.observeAllNotes(userId)
+
+    fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>> =
+        repository.observeNotesByCategory(userId, categoryName)
+
 
     fun addNote(
         userId: Int,
@@ -62,6 +70,8 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
         detail: String?
     ) {
         viewModelScope.launch {
+            val now = Date() // Lấy thời gian hiện tại
+
             repository.addNote(
                 Note(
                     userId = userId,
@@ -69,18 +79,22 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
                     title = title,
                     detail = detail,
                     titlePlain = removeAccents(title),
-                    detailPlain = detail?.let { removeAccents(it) }
+                    detailPlain = detail?.let { removeAccents(it) },
+                    createdAt = now,
+                    updatedAt = now
                 )
             )
         }
     }
+
+
 
     fun updateNote(note: Note) {
         viewModelScope.launch {
             repository.updateNote(note.copy(
                 titlePlain = removeAccents(note.title),
                 detailPlain = note.detail?.let { removeAccents(it) },
-                updatedAt = java.util.Date()
+                updatedAt = Date()
             ))
         }
     }
@@ -89,7 +103,7 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
         viewModelScope.launch {
             repository.updateNote(note.copy(
                 isTrashed = true,
-                trashedAt = java.util.Date()
+                trashedAt = Date()
             ))
         }
     }
@@ -112,8 +126,9 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
             repository.updateNote(note.copy(isPinned = !note.isPinned))
         }
     }
+//    fun observeFavoriteNotes(userId: Int) =
+//        repository.observeFavoriteNotes(userId)
 
-    //bỏ dấu để search
     private fun removeAccents(input: String): String {
         val normalized = java.text.Normalizer.normalize(input, java.text.Normalizer.Form.NFD)
         return normalized.replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
