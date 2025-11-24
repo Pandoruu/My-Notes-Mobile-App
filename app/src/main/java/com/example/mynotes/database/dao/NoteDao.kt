@@ -22,16 +22,19 @@ interface NoteDao {
     @Query("SELECT * FROM notes WHERE id = :noteId LIMIT 1")
     fun observeNoteById(noteId: Int): LiveData<Note?>
 
-    @Query("SELECT * FROM notes WHERE user_id = :userId AND is_trashed = 0 ORDER BY is_pinned DESC, updated_at DESC")
+    @Query("""
+        SELECT * FROM notes
+        WHERE user_id = :userId AND is_trashed = 0
+        ORDER BY is_pinned DESC, updated_at DESC
+    """)
     fun observeAllNotes(userId: Int): LiveData<List<Note>>
 
     @Query("""
         SELECT n.* FROM notes n
-        INNER JOIN categories c ON n.category_id = c.id
-        WHERE n.user_id = :userId AND c.name = :categoryName AND n.is_trashed = 0
+        WHERE n.user_id = :userId AND n.category_id = :categoryId AND n.is_trashed = 0
         ORDER BY n.is_pinned DESC, n.updated_at DESC
     """)
-    fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>>
+    fun observeNotesByCategory(userId: Int, categoryId: Int): LiveData<List<Note>>
 
     @Query("SELECT * FROM notes WHERE user_id = :userId")
     suspend fun getAllNotesOnce(userId: Int): List<Note>

@@ -59,9 +59,8 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
     fun observeAllNotes(userId: Int): LiveData<List<Note>> =
         repository.observeAllNotes(userId)
 
-    fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>> =
-        repository.observeNotesByCategory(userId, categoryName)
-
+    fun observeNotesByCategory(userId: Int, categoryId: Int): LiveData<List<Note>> =
+        repository.observeNotesByCategory(userId, categoryId)
 
     fun addNote(
         userId: Int,

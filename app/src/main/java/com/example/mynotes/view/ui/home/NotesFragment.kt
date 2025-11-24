@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.mynotes.R
 import com.example.mynotes.database.DatabaseInit
+import com.example.mynotes.database.table.Note
 import com.example.mynotes.database.repo.NotesRepository
 import com.example.mynotes.database.viewmodel.NotesViewModel
 import com.example.mynotes.databinding.FragmentNotesBinding
@@ -27,6 +29,10 @@ class NotesFragment : Fragment() {
 
     private var currentUserId = 1 // User mặc định
     private var currentCategoryName = "All"
+
+    private var currentNotesLiveData: LiveData<List<Note>>? = null
+
+    private val categoriesList = mutableListOf<Pair<Int, String>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,38 +72,41 @@ class NotesFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        // Mặc định hiển thị tab "All"
-        loadAllNotes()
-
         setUpHamburgerMenu()
-
     }
 
     private fun setupTabs() {
         viewModel.observeCategories(currentUserId).observe(viewLifecycleOwner) { categories ->
             binding.tabLayout.removeAllTabs()
+            categoriesList.clear()
 
-            // Tab đầu tiên luôn là "All"
-            val allTab = binding.tabLayout.newTab().setText("All")
-            binding.tabLayout.addTab(allTab)
+            // Tab đầu tiên luôn là "All" với id = 0
+            binding.tabLayout.addTab(binding.tabLayout.newTab().setText("All"))
+            categoriesList.add(0 to "All")
 
-            // Thêm các tab khác
             for (cat in categories) {
                 if (cat.name != "All") {
                     binding.tabLayout.addTab(binding.tabLayout.newTab().setText(cat.name))
+                    categoriesList.add(cat.id to cat.name)
                 }
             }
 
-            // Mặc định chọn All
-            binding.tabLayout.selectTab(allTab)
+            // Chọn tab All mặc định (position 0) và load notes tương ứng
+            binding.tabLayout.selectTab(binding.tabLayout.getTabAt(0))
+            currentCategoryName = "All"
+            loadAllNotes()
         }
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                val tabName = tab?.text.toString()
-                currentCategoryName = tabName
-                if (tabName == "All") loadAllNotes()
-                else loadNotesByCategory(tabName)
+                val position = tab?.position ?: 0
+                val (catId, catName) = categoriesList.getOrNull(position) ?: (0 to "All")
+                currentCategoryName = catName
+                if (catId == 0) {
+                    loadAllNotes()
+                } else {
+                    loadNotesByCategory(catId)
+                }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -105,20 +114,22 @@ class NotesFragment : Fragment() {
         })
     }
 
-
-    // Load tất cả notes
+    // Load tất cả notes (loại bỏ observer cũ trước khi observe LiveData mới)
     private fun loadAllNotes() {
-        viewModel.observeAllNotes(currentUserId).observe(viewLifecycleOwner) { notes ->
+        currentNotesLiveData?.removeObservers(viewLifecycleOwner)
+        currentNotesLiveData = viewModel.observeAllNotes(currentUserId)
+        currentNotesLiveData?.observe(viewLifecycleOwner) { notes ->
             adapter.submitList(notes)
         }
     }
 
-    // Load note theo Category
-    private fun loadNotesByCategory(categoryName: String) {
-        viewModel.observeNotesByCategory(currentUserId, categoryName)
-            .observe(viewLifecycleOwner) { notes ->
-                adapter.submitList(notes)
-            }
+    // Load note theo categoryId (loại bỏ observer cũ trước khi observe LiveData mới)
+    private fun loadNotesByCategory(categoryId: Int) {
+        currentNotesLiveData?.removeObservers(viewLifecycleOwner)
+        currentNotesLiveData = viewModel.observeNotesByCategory(currentUserId, categoryId)
+        currentNotesLiveData?.observe(viewLifecycleOwner) { notes ->
+            adapter.submitList(notes)
+        }
     }
 
     private fun setUpHamburgerMenu() {
@@ -149,6 +160,8 @@ class NotesFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // Gỡ observer nếu còn
+        currentNotesLiveData?.removeObservers(viewLifecycleOwner)
         _binding = null
     }
 }
