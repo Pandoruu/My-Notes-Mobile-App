@@ -19,7 +19,9 @@ object DatabaseInit {
                 context!!.applicationContext,
                 NotesDatabase::class.java,
                 "notes_database"
-            ).build()
+            )
+                .fallbackToDestructiveMigration()
+                .build()
 
             INSTANCE = instance
             return instance

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -55,6 +56,8 @@ class ViewNoteFragment : Fragment() {
 
         val noteId = args.noteId
 
+        binding.btnTrashBin.isVisible = false
+
         // Nếu là note cũ
         if (noteId != -1) {
             viewModel.observeNoteById(noteId).observe(viewLifecycleOwner) { note ->
@@ -62,15 +65,18 @@ class ViewNoteFragment : Fragment() {
                     currentNote = it
                     binding.etTitle.setText(it.title)
                     binding.etDetail.setText(it.detail)
+                    binding.btnTrashBin.isVisible = true
                 }
             }
         }
 
         setupCategorySpinner()
 
-        binding.btnSave.setOnClickListener { saveNote() }
+        binding.btnSave.setOnClickListener {
+            saveNote()
+        }
 
-        binding.topLayout.findViewById<ImageView>(R.id.btn_trash_bin)?.setOnClickListener {
+        binding.btnTrashBin.setOnClickListener {
             currentNote?.let {
                 viewModel.moveNoteToTrash(it)
                 Toast.makeText(requireContext(), "Moved to Trash", Toast.LENGTH_SHORT).show()
@@ -85,10 +91,7 @@ class ViewNoteFragment : Fragment() {
 
     private fun setupCategorySpinner() {
         viewModel.observeCategories(userId).observe(viewLifecycleOwner) { categories ->
-            val categoryNames = mutableListOf<String>().apply {
-                addAll(categories.map { it.name })
-            }
-
+            val categoryNames = categories.map { it.name }
 
             val adapter = ArrayAdapter(
                 requireContext(),
@@ -99,8 +102,8 @@ class ViewNoteFragment : Fragment() {
             binding.spinner.adapter = adapter
 
             currentNote?.categoryId?.let { cid ->
-                val pos = categories.indexOfFirst { it.id == cid } + 1
-                if (pos >= 0) binding.spinner.setSelection(pos)
+                val idx = categories.indexOfFirst { it.id == cid }
+                if (idx != -1) binding.spinner.setSelection(idx)
             }
 
             binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -110,7 +113,8 @@ class ViewNoteFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    selectedCategoryId = if (position == 0) null else categories[position - 1].id
+                    // position trùng với index trong categories
+                    selectedCategoryId = categories.getOrNull(position)?.id
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}

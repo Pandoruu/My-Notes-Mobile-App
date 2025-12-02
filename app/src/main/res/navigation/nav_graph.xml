@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_notesNav_to_categoryFragment"
             app:destination="@id/categoryFragment" />
+        <action
+            android:id="@+id/action_notesNav_to_searchNav"
+            app:destination="@id/searchNav" />
     </fragment>
 
     <!-- CalendarFragment -->
@@ -34,7 +37,12 @@
     <fragment
         android:id="@+id/searchNav"
         android:name="com.example.mynotes.view.ui.search.SearchFragment"
-        android:label="SearchFragment" />
+        android:label="SearchFragment">
+
+        <action
+            android:id="@+id/action_searchNav_to_viewNoteFragment"
+            app:destination="@id/viewNoteFragment" />
+    </fragment>
 
     <!-- ViewNoteFragment -->
     <fragment
@@ -51,7 +59,12 @@
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.example.mynotes.view.ui.favorite.FavoriteFragment"
-        android:label="FavoriteFragment" />
+        android:label="FavoriteFragment">
+
+        <action
+            android:id="@+id/action_favoriteFragment_to_viewNoteFragment"
+            app:destination="@id/viewNoteFragment" />
+    </fragment>
     <fragment
         android:id="@+id/trashFragment"
         android:name="com.example.mynotes.view.ui.trash.TrashFragment"

@@ -48,8 +48,9 @@ class NotesRepository(
 
     fun observeAllNotes(userId: Int): LiveData<List<Note>> = noteDao.observeAllNotes(userId)
 
-    fun observeNotesByCategory(userId: Int, categoryName: String): LiveData<List<Note>> =
-        noteDao.observeNotesByCategory(userId, categoryName)
-//    fun observeFavoriteNotes(userId: Int) =
-//        noteDao.observeFavoriteNotes(userId)
+    fun observeNotesByCategory(userId: Int, categoryId: Int): LiveData<List<Note>> =
+        noteDao.observeNotesByCategory(userId, categoryId)
+
+    fun observeFavoriteNotes(userId: Int) =
+        noteDao.observeFavoriteNotes(userId)
 }
