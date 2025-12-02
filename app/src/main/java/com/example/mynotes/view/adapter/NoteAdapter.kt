@@ -1,5 +1,6 @@
 package com.example.mynotes.view.adapter
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,7 +11,8 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class NoteAdapter(
-    private val onClick: (Note) -> Unit
+    private val onClick: (Note) -> Unit,
+    private val onLongClick: ((Note) -> Unit)? = null
 ) : ListAdapter<Note, NoteAdapter.NoteViewHolder>(DiffCallback()) {
 
     inner class NoteViewHolder(val binding: ItemNoteBinding) : RecyclerView.ViewHolder(binding.root){
@@ -21,7 +23,16 @@ class NoteAdapter(
                 .format(note.updatedAt)
             binding.date.text = formattedDate
 
+            // Hiển thị/ẩn icon pin
+            binding.iconPin.visibility = if (note.isPinned) View.VISIBLE else View.GONE
+
             binding.root.setOnClickListener { onClick(note) }
+
+            // Xử lý long-click
+            binding.root.setOnLongClickListener {
+                onLongClick?.invoke(note)
+                true
+            }
         }
     }
 

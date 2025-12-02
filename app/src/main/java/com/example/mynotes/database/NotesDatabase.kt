@@ -6,7 +6,7 @@ import com.example.mynotes.database.dao.*
 
 @Database(
     entities = [User::class, Category::class, Note::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

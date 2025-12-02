@@ -34,30 +34,66 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        val db = DatabaseInit.getDatabase(requireContext())
-//        val repo = NotesRepository(
-//            userDao = db.userDao(),
-//            categoryDao = db.categoryDao(),
-//            noteDao = db.noteDao()
-//        )
-//        viewModel = ViewModelProvider(
-//            this,
-//            NotesViewModel.NotesViewModelFactory(repo)
-//        )[NotesViewModel::class.java]
-//
-//        adapter = NoteAdapter { note ->
-//        }
-//
-//        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-//        binding.recyclerView.adapter = adapter
-//
-//        viewModel.observeFavoriteNotes(1).observe(viewLifecycleOwner) { notes ->
-//            adapter.submitList(notes)
-//        }
+        val db = DatabaseInit.getDatabase(requireContext())
+        val repo = NotesRepository(
+            userDao = db.userDao(),
+            categoryDao = db.categoryDao(),
+            noteDao = db.noteDao()
+        )
+        viewModel = ViewModelProvider(
+            this,
+            NotesViewModel.NotesViewModelFactory(repo)
+        )[NotesViewModel::class.java]
+
+        adapter = NoteAdapter(
+            onClick = { note ->
+                // Navigate to ViewNoteFragment
+                val action = FavoriteFragmentDirections.actionFavoriteFragmentToViewNoteFragment(note.id)
+                findNavController().navigate(action)
+            },
+            onLongClick = { note ->
+                // Hiển thị dialog options
+                showNoteOptionsDialog(note)
+            }
+        )
+
+        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerView.adapter = adapter
+
+        viewModel.observeFavoriteNotes(1).observe(viewLifecycleOwner) { notes ->
+            adapter.submitList(notes)
+        }
 
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun showNoteOptionsDialog(note: com.example.mynotes.database.table.Note) {
+        val pinText = if (note.isPinned) "Unpin" else "Pin"
+        val favoriteText = if (note.isFavorite) "Remove from Favorite" else "Add to Favorite"
+
+        val options = arrayOf(pinText, favoriteText)
+
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Note Options")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        // Toggle Pin
+                        viewModel.togglePin(note)
+                    }
+                    1 -> {
+                        // Toggle Favorite
+                        viewModel.toggleFavorite(note)
+                    }
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onDestroyView() {

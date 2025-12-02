@@ -79,9 +79,9 @@ class MainActivity : AppCompatActivity() {
                 val demoNotes = listOf(
                     Note(userId = user.id, categoryId = category.id, title = "Chào mừng đến MyNotes!", detail = "Đây là ghi chú mẫu đầu tiên của bạn."),
                     Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 2", detail = "Bạn có thể chỉnh sửa nội dung này."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 3", detail = "Thử tạo thêm category khác để phân loại."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 4", detail = "Bạn có thể ghim note quan trọng để nó hiện trên đầu."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 5", detail = "Kéo xuống Trash để xoá ghi chú khi không cần nữa.")
+                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 3", detail = "Bạn có thể chỉnh sửa nội dung này."),
+                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 4", detail = "Bạn có thể chỉnh sửa nội dung này."),
+                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 5", detail = "Bạn có thể chỉnh sửa nội dung này..")
                 )
                 demoNotes.forEach { noteDao.insert(it) }
             }

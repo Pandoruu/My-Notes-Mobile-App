@@ -125,8 +125,15 @@ class NotesViewModel(private val repository: NotesRepository) : ViewModel() {
             repository.updateNote(note.copy(isPinned = !note.isPinned))
         }
     }
-//    fun observeFavoriteNotes(userId: Int) =
-//        repository.observeFavoriteNotes(userId)
+
+    fun toggleFavorite(note: Note) {
+        viewModelScope.launch {
+            repository.updateNote(note.copy(isFavorite = !note.isFavorite))
+        }
+    }
+
+    fun observeFavoriteNotes(userId: Int) =
+        repository.observeFavoriteNotes(userId)
 
     private fun removeAccents(input: String): String {
         val normalized = java.text.Normalizer.normalize(input, java.text.Normalizer.Form.NFD)

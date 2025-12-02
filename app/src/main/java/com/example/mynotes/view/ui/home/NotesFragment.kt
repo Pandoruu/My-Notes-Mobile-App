@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
@@ -57,10 +58,15 @@ class NotesFragment : Fragment() {
             NotesViewModel.NotesViewModelFactory(repo)
         )[NotesViewModel::class.java]
 
-        adapter = NoteAdapter { note ->
-            val action = NotesFragmentDirections.actionNotesNavToViewNoteFragment(note.id)
-            findNavController().navigate(action)
-        }
+        adapter = NoteAdapter(
+            onClick = { note ->
+                val action = NotesFragmentDirections.actionNotesNavToViewNoteFragment(note.id)
+                findNavController().navigate(action)
+            },
+            onLongClick = { note ->
+                showNoteOptionsDialog(note)
+            }
+        )
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerView.adapter = adapter
 
@@ -156,6 +162,33 @@ class NotesFragment : Fragment() {
             }
             popup.show()
         }
+    }
+
+    private fun showNoteOptionsDialog(note: Note) {
+        val pinText = if (note.isPinned) "Unpin" else "Pin"
+        val favoriteText = if (note.isFavorite) "Remove from Favorite" else "Add to Favorite"
+
+        val options = arrayOf(pinText, favoriteText)
+
+        AlertDialog.Builder(requireContext())
+            .setTitle("Note Options")
+            .setItems(options) { dialog, which ->
+                when (which) {
+                    0 -> {
+                        // Toggle Pin
+                        viewModel.togglePin(note)
+                    }
+                    1 -> {
+                        // Toggle Favorite
+                        viewModel.toggleFavorite(note)
+                    }
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onDestroyView() {
