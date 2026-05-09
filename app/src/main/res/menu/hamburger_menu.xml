@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/menu_account"
+        android:icon="@drawable/ic_menu_account"
+        android:title="@string/account" />
+
+    <item
+        android:id="@+id/menu_theme"
+        android:icon="@drawable/ic_menu_theme"
+        android:title="@string/theme" />
+
+    <item
+        android:id="@+id/menu_language"
+        android:icon="@drawable/ic_menu_language"
+        android:title="@string/language" />
+
+    <item
         android:id="@+id/menu_favorite"
-        android:title="Favorite"/>
+        android:icon="@drawable/ic_note"
+        android:title="@string/favorite" />
 
     <item
         android:id="@+id/menu_trash"
-        android:title="Trash"/>
+        android:icon="@drawable/ic_trash_bin"
+        android:title="@string/trash" />
 
     <item
         android:id="@+id/menu_category"
-        android:title="Category"/>
+        android:icon="@drawable/ic_cog"
+        android:title="@string/category" />
+
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_menu_logout"
+        android:title="@string/logout" />
 </menu>

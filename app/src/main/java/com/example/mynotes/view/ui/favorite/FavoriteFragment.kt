@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.mynotes.database.DatabaseInit
-import com.example.mynotes.database.repo.NotesRepository
-import com.example.mynotes.database.viewmodel.NotesViewModel
+import com.example.mynotes.di.AppContainer
+import com.example.mynotes.domain.model.Note
+import com.example.mynotes.presentation.favorite.FavoriteViewModel
 import com.example.mynotes.databinding.FragmentFavoriteBinding
 import com.example.mynotes.view.adapter.NoteAdapter
 
@@ -19,7 +19,7 @@ class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: NotesViewModel
+    private lateinit var viewModel: FavoriteViewModel
     private lateinit var adapter: NoteAdapter
 
     override fun onCreateView(
@@ -34,16 +34,15 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = DatabaseInit.getDatabase(requireContext())
-        val repo = NotesRepository(
-            userDao = db.userDao(),
-            categoryDao = db.categoryDao(),
-            noteDao = db.noteDao()
-        )
         viewModel = ViewModelProvider(
             this,
-            NotesViewModel.NotesViewModelFactory(repo)
-        )[NotesViewModel::class.java]
+            FavoriteViewModel.Factory(
+                observeCurrentUserIdUseCase = AppContainer.observeCurrentUserIdUseCase,
+                observeFavoriteNotesUseCase = AppContainer.observeFavoriteNotesUseCase,
+                togglePinUseCase = AppContainer.togglePinUseCase,
+                toggleFavoriteUseCase = AppContainer.toggleFavoriteUseCase
+            )
+        )[FavoriteViewModel::class.java]
 
         adapter = NoteAdapter(
             onClick = { note ->
@@ -60,7 +59,7 @@ class FavoriteFragment : Fragment() {
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
 
-        viewModel.observeFavoriteNotes(1).observe(viewLifecycleOwner) { notes ->
+        viewModel.observeFavoriteNotes().observe(viewLifecycleOwner) { notes ->
             adapter.submitList(notes)
         }
 
@@ -69,7 +68,7 @@ class FavoriteFragment : Fragment() {
         }
     }
 
-    private fun showNoteOptionsDialog(note: com.example.mynotes.database.table.Note) {
+    private fun showNoteOptionsDialog(note: Note) {
         val pinText = if (note.isPinned) "Unpin" else "Pin"
         val favoriteText = if (note.isFavorite) "Remove from Favorite" else "Add to Favorite"
 

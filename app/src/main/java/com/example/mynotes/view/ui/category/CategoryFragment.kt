@@ -9,11 +9,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mynotes.R
-import com.example.mynotes.database.DatabaseInit
-import com.example.mynotes.database.repo.NotesRepository
-import com.example.mynotes.database.table.Category
-import com.example.mynotes.database.viewmodel.NotesViewModel
+import com.example.mynotes.di.AppContainer
+import com.example.mynotes.domain.model.Category
+import com.example.mynotes.presentation.category.CategoryViewModel
 import com.example.mynotes.databinding.FragmentCategoryBinding
 import com.example.mynotes.view.adapter.CategoryManagerAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,10 +21,8 @@ class CategoryFragment : Fragment() {
     private var _binding: FragmentCategoryBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: NotesViewModel
+    private lateinit var viewModel: CategoryViewModel
     private lateinit var adapter: CategoryManagerAdapter
-
-    private val currentUserId = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,9 +33,16 @@ class CategoryFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val db = DatabaseInit.getDatabase(requireContext())
-        val repo = NotesRepository(db.userDao(), db.categoryDao(), db.noteDao())
-        viewModel = ViewModelProvider(this, NotesViewModel.NotesViewModelFactory(repo))[NotesViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            CategoryViewModel.Factory(
+                observeCurrentUserIdUseCase = AppContainer.observeCurrentUserIdUseCase,
+                observeCategoriesUseCase = AppContainer.observeCategoriesUseCase,
+                addCategoryUseCase = AppContainer.addCategoryUseCase,
+                updateCategoryUseCase = AppContainer.updateCategoryUseCase,
+                deleteCategoryUseCase = AppContainer.deleteCategoryUseCase
+            )
+        )[CategoryViewModel::class.java]
 
         setupRecyclerView()
         setupAddButton()
@@ -76,7 +79,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun observeData() {
-        viewModel.observeCategories(currentUserId).observe(viewLifecycleOwner) {
+        viewModel.observeCategories().observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }
@@ -89,11 +92,11 @@ class CategoryFragment : Fragment() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle(if (category == null) "Thêm danh mục" else "Đổi tên danh mục")
             .setView(input)
-            .setPositiveButton("Lưu") { _, _ ->
+            .setPositiveButton("Luu") { _, _ ->
                 val name = input.text.toString().trim()
                 if (name.isNotEmpty()) {
                     if (category == null)
-                        viewModel.addCategory(currentUserId, name)
+                        viewModel.addCategory(name)
                     else
                         viewModel.updateCategory(category.copy(name = name))
                 }

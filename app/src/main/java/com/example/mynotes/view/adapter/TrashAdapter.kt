@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mynotes.R
-import com.example.mynotes.database.table.Note
+import com.example.mynotes.domain.model.Note
 import com.example.mynotes.databinding.ItemNoteBinding
 
 class TrashAdapter(

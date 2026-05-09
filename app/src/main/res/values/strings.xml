@@ -1,5 +1,35 @@
 <resources>
     <string name="app_name">My Notes</string>
+
+    <string name="open_menu">Open menu</string>
+    <string name="back">Back</string>
+    <string name="account">Account</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+    <string name="favorite">Favorite</string>
+    <string name="trash">Trash</string>
+    <string name="category">Category</string>
+    <string name="logout">Logout</string>
+    <string name="logout_confirm">Are you sure you want to log out?</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="lang_english">English</string>
+    <string name="lang_vietnamese">Vietnamese</string>
+
+    <string name="full_name">Full name</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="note_count">Note count</string>
+
+    <string name="note_options">Note options</string>
+    <string name="pin">Pin</string>
+    <string name="unpin">Unpin</string>
+    <string name="add_favorite">Add to Favorite</string>
+    <string name="remove_favorite">Remove from Favorite</string>
+
     <string-array name="Category">
         <item>C1</item>
         <item>C2</item>
