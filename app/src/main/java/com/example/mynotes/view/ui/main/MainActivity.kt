@@ -4,16 +4,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.mynotes.R
-import com.example.mynotes.database.DatabaseInit
-import com.example.mynotes.database.table.*
 import com.example.mynotes.databinding.ActivityMainBinding
-import kotlinx.coroutines.Dispatchers
+import com.example.mynotes.di.AppContainer
+import com.example.mynotes.domain.model.ThemeMode
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -42,48 +45,37 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.viewNoteFragment,
                 R.id.favoriteFragment,
-                R.id.trashFragment -> binding.bottomNav.visibility = View.GONE
+                R.id.trashFragment,
+                R.id.loginFragment,
+                R.id.registerFragment,
+                R.id.accountFragment -> binding.bottomNav.visibility = View.GONE
                 else -> binding.bottomNav.visibility = View.VISIBLE
             }
         }
 
-        setupInitialData()
+        applySettings()
     }
 
-    private fun setupInitialData() {
-        val db = DatabaseInit.getDatabase(this)
-        val userDao = db.userDao()
-        val categoryDao = db.categoryDao()
-        val noteDao = db.noteDao()
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            // Tạo user mặc định
-            var user = userDao.getUserByUsernameOnce("local_user")
-            if (user == null) {
-                val newUser = User(username = "local_user", password = "")
-                val id = userDao.insert(newUser)
-                user = newUser.copy(id = id.toInt())
-            }
-
-            // Tạo category mặc định “All”
-            var category = categoryDao.getCategoryByNameOnce(user.id, "All")
-            if (category == null) {
-                val newCategory = Category(userId = user.id, name = "All")
-                val id = categoryDao.insert(newCategory)
-                category = newCategory.copy(id = id.toInt())
-            }
-
-            // Tạo 5 ghi chú mẫu nếu chưa có
-            val notes = noteDao.getAllNotesOnce(user.id)
-            if (notes.isEmpty()) {
-                val demoNotes = listOf(
-                    Note(userId = user.id, categoryId = category.id, title = "Chào mừng đến MyNotes!", detail = "Đây là ghi chú mẫu đầu tiên của bạn."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 2", detail = "Bạn có thể chỉnh sửa nội dung này."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 3", detail = "Bạn có thể chỉnh sửa nội dung này."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 4", detail = "Bạn có thể chỉnh sửa nội dung này."),
-                    Note(userId = user.id, categoryId = category.id, title = "Ghi chú số 5", detail = "Bạn có thể chỉnh sửa nội dung này..")
-                )
-                demoNotes.forEach { noteDao.insert(it) }
+    private fun applySettings() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    AppContainer.observeThemeModeUseCase().collect { mode ->
+                        val nightMode = if (mode == ThemeMode.DARK) {
+                            AppCompatDelegate.MODE_NIGHT_YES
+                        } else {
+                            AppCompatDelegate.MODE_NIGHT_NO
+                        }
+                        AppCompatDelegate.setDefaultNightMode(nightMode)
+                    }
+                }
+                launch {
+                    AppContainer.observeLanguageUseCase().collect { language ->
+                        val tag = if (language == "system") "" else language
+                        val locales = LocaleListCompat.forLanguageTags(tag)
+                        AppCompatDelegate.setApplicationLocales(locales)
+                    }
+                }
             }
         }
     }

@@ -5,18 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.example.mynotes.R
-import com.example.mynotes.database.DatabaseInit
-import com.example.mynotes.database.repo.NotesRepository
-import com.example.mynotes.database.table.Note
-import com.example.mynotes.database.viewmodel.NotesViewModel
+import com.example.mynotes.di.AppContainer
+import com.example.mynotes.domain.model.Note
+import com.example.mynotes.presentation.viewnote.ViewNoteViewModel
 import com.example.mynotes.databinding.FragmentViewNoteBinding
-import java.util.Date
 
 class ViewNoteFragment : Fragment() {
 
@@ -24,11 +22,10 @@ class ViewNoteFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val args: ViewNoteFragmentArgs by navArgs()
-    private lateinit var viewModel: NotesViewModel
+    private lateinit var viewModel: ViewNoteViewModel
 
     private var currentNote: Note? = null
     private var selectedCategoryId: Int? = null
-    private val userId = 1 //để tạm
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,17 +39,17 @@ class ViewNoteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Khởi tạo ViewModel
-        val db = DatabaseInit.getDatabase(requireContext())
-        val repo = NotesRepository(
-            userDao = db.userDao(),
-            categoryDao = db.categoryDao(),
-            noteDao = db.noteDao()
-        )
         viewModel = ViewModelProvider(
             this,
-            NotesViewModel.NotesViewModelFactory(repo)
-        )[NotesViewModel::class.java]
+            ViewNoteViewModel.Factory(
+                observeCurrentUserIdUseCase = AppContainer.observeCurrentUserIdUseCase,
+                observeNoteByIdUseCase = AppContainer.observeNoteByIdUseCase,
+                observeCategoriesUseCase = AppContainer.observeCategoriesUseCase,
+                addNoteUseCase = AppContainer.addNoteUseCase,
+                updateNoteUseCase = AppContainer.updateNoteUseCase,
+                moveNoteToTrashUseCase = AppContainer.moveNoteToTrashUseCase
+            )
+        )[ViewNoteViewModel::class.java]
 
         val noteId = args.noteId
 
@@ -77,10 +74,8 @@ class ViewNoteFragment : Fragment() {
         }
 
         binding.btnTrashBin.setOnClickListener {
-            currentNote?.let {
-                viewModel.moveNoteToTrash(it)
-                Toast.makeText(requireContext(), "Moved to Trash", Toast.LENGTH_SHORT).show()
-                findNavController().popBackStack()
+            currentNote?.let { note ->
+                showMoveToTrashConfirm(note)
             }
         }
 
@@ -90,7 +85,7 @@ class ViewNoteFragment : Fragment() {
     }
 
     private fun setupCategorySpinner() {
-        viewModel.observeCategories(userId).observe(viewLifecycleOwner) { categories ->
+        viewModel.observeCategories().observe(viewLifecycleOwner) { categories ->
             val categoryNames = categories.map { it.name }
 
             val adapter = ArrayAdapter(
@@ -133,7 +128,6 @@ class ViewNoteFragment : Fragment() {
 
         if (currentNote == null) { // Tạo mới
             viewModel.addNote(
-                userId = userId,
                 categoryId = selectedCategoryId,
                 title = title,
                 detail = detail
@@ -143,14 +137,29 @@ class ViewNoteFragment : Fragment() {
             val updated = currentNote!!.copy(
                 title = title,
                 detail = detail,
-                categoryId = selectedCategoryId,
-                updatedAt = Date()
+                categoryId = selectedCategoryId
             )
             viewModel.updateNote(updated)
             Toast.makeText(requireContext(), "Note updated", Toast.LENGTH_SHORT).show()
         }
 
         findNavController().popBackStack()
+    }
+
+    private fun showMoveToTrashConfirm(note: Note) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Delete note")
+            .setMessage("Move this note to Trash?")
+            .setPositiveButton("Move") { dialog, _ ->
+                viewModel.moveNoteToTrash(note)
+                Toast.makeText(requireContext(), "Moved to Trash", Toast.LENGTH_SHORT).show()
+                findNavController().popBackStack()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 
     override fun onDestroyView() {

@@ -2,7 +2,41 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/notesNav">
+    app:startDestination="@id/loginFragment">
+
+    <!-- LoginFragment -->
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.mynotes.view.ui.auth.LoginFragment"
+        android:label="LoginFragment">
+
+        <argument
+            android:name="username"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="password"
+            app:argType="string"
+            android:defaultValue="" />
+
+        <action
+            android:id="@+id/action_loginFragment_to_notesNav"
+            app:destination="@id/notesNav" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+
+    <!-- RegisterFragment -->
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.mynotes.view.ui.auth.RegisterFragment"
+        android:label="RegisterFragment">
+
+        <action
+            android:id="@+id/action_registerFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 
     <!-- NotesFragment -->
     <fragment
@@ -10,6 +44,9 @@
         android:name="com.example.mynotes.view.ui.home.NotesFragment"
         android:label="NotesFragment">
 
+        <action
+            android:id="@+id/action_notesNav_to_accountFragment"
+            app:destination="@id/accountFragment" />
         <action
             android:id="@+id/action_notesNav_to_viewNoteFragment"
             app:destination="@id/viewNoteFragment" />
@@ -73,4 +110,8 @@
         android:id="@+id/categoryFragment"
         android:name="com.example.mynotes.view.ui.category.CategoryFragment"
         android:label="CategoryFragment" />
+    <fragment
+        android:id="@+id/accountFragment"
+        android:name="com.example.mynotes.view.ui.account.AccountFragment"
+        android:label="AccountFragment" />
 </navigation>

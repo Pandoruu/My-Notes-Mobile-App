@@ -11,22 +11,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.mynotes.database.repo.NotesRepository
-import com.example.mynotes.database.table.Note
-import com.example.mynotes.database.viewmodel.NotesViewModel
+import com.example.mynotes.di.AppContainer
+import com.example.mynotes.domain.model.Note
+import com.example.mynotes.presentation.search.SearchViewModel
 import com.example.mynotes.databinding.FragmentSearchBinding
 import com.example.mynotes.view.adapter.NoteAdapter
-import com.example.mynotes.database.*
-import java.text.Normalizer
 
 class SearchFragment : Fragment() {
 
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModel: NotesViewModel
+    private lateinit var viewModel: SearchViewModel
     private lateinit var noteAdapter: NoteAdapter
-    private var userId: Int = 1
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,9 +36,15 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val db = DatabaseInit.getDatabase(requireContext())
-        val repo = NotesRepository(db.userDao(), db.categoryDao(), db.noteDao())
-        viewModel = ViewModelProvider(this, NotesViewModel.NotesViewModelFactory(repo))[NotesViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            SearchViewModel.Factory(
+                observeCurrentUserIdUseCase = AppContainer.observeCurrentUserIdUseCase,
+                searchNotesUseCase = AppContainer.searchNotesUseCase,
+                togglePinUseCase = AppContainer.togglePinUseCase,
+                toggleFavoriteUseCase = AppContainer.toggleFavoriteUseCase
+            )
+        )[SearchViewModel::class.java]
 
         setupRecyclerView()
         setupSearchBar()
@@ -136,16 +139,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun searchNotes(query: String) {
-        // Chuyển query về dạng chữ thường không dấu
-        val normalizedQuery = removeAccents(query.lowercase())
-        viewModel.searchNotes(userId, normalizedQuery).observe(viewLifecycleOwner) { filteredNotes ->
+        viewModel.search(query).observe(viewLifecycleOwner) { filteredNotes ->
             noteAdapter.submitList(filteredNotes)
         }
-    }
-
-    private fun removeAccents(input: String): String {
-        val normalized = Normalizer.normalize(input, Normalizer.Form.NFD)
-        return normalized.replace("\\p{InCombiningDiacriticalMarks}+".toRegex(), "")
     }
 
     override fun onDestroyView() {

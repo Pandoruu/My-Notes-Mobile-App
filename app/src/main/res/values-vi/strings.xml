@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">My Notes</string>
+
+    <string name="open_menu">Mo menu</string>
+    <string name="back">Quay lai</string>
+    <string name="account">Tai khoan</string>
+    <string name="theme">Giao dien</string>
+    <string name="language">Ngon ngu</string>
+    <string name="favorite">Yeu thich</string>
+    <string name="trash">Thung rac</string>
+    <string name="category">Danh muc</string>
+    <string name="logout">Dang xuat</string>
+    <string name="logout_confirm">Ban co chac muon dang xuat khong?</string>
+    <string name="cancel">Huy</string>
+
+    <string name="theme_light">Sang</string>
+    <string name="theme_dark">Toi</string>
+    <string name="lang_english">Tieng Anh</string>
+    <string name="lang_vietnamese">Tieng Viet</string>
+
+    <string name="full_name">Ho va ten</string>
+    <string name="username">Ten dang nhap</string>
+    <string name="email">Email</string>
+    <string name="phone">So dien thoai</string>
+    <string name="note_count">So luong ghi chu</string>
+
+    <string name="note_options">Tuy chon ghi chu</string>
+    <string name="pin">Ghim</string>
+    <string name="unpin">Bo ghim</string>
+    <string name="add_favorite">Them vao yeu thich</string>
+    <string name="remove_favorite">Xoa khoi yeu thich</string>
+</resources>
+
