@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_block_image.xml – ImageView chiếm full width, có nút xóa -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
+
+    <ImageView
+        android:id="@+id/iv_image_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:maxHeight="320dp"
+        android:background="@drawable/radius_16dp" />
+
+    <!-- Nút xóa – góc trên phải -->
+    <ImageButton
+        android:id="@+id/btn_delete_image"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="4dp"
+        android:background="#AA000000"
+        android:src="@drawable/ic_delete_block"
+        android:padding="4dp"
+        android:contentDescription="Xóa ảnh" />
+
+</FrameLayout>

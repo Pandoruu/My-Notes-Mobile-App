@@ -17,7 +17,8 @@ fun NoteEntity.toDomain(): Note =
         isTrashed = isTrashed,
         trashedAt = trashedAt,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        contentBlocks = contentBlocks
     )
 
 fun Note.toEntity(): NoteEntity =
@@ -34,6 +35,6 @@ fun Note.toEntity(): NoteEntity =
         isTrashed = isTrashed,
         trashedAt = trashedAt,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        contentBlocks = contentBlocks
     )
-

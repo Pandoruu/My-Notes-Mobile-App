@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_block_audio.xml – giống audio player trong ảnh mẫu -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
+
+    <!-- Container player -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_audio_block"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="8dp">
+
+        <!-- Nút Play/Stop -->
+        <FrameLayout
+            android:id="@+id/btn_play_audio"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:background="@drawable/bg_play_button"
+            android:layout_marginEnd="10dp">
+
+            <ImageView
+                android:id="@+id/iv_play_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_play"
+                android:tint="#1A1A1A" />
+        </FrameLayout>
+
+        <!-- Duration -->
+        <TextView
+            android:id="@+id/tv_audio_duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:fontFamily="monospace"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Waveform placeholder – dùng View lặp lại -->
+        <LinearLayout
+            android:id="@+id/ll_waveform"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- 16 thanh waveform bằng code hoặc tĩnh -->
+            <View android:layout_width="2dp" android:layout_height="8dp"  android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="16dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="24dp" android:layout_marginHorizontal="1dp" android:background="#FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="14dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="20dp" android:layout_marginHorizontal="1dp" android:background="#FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="10dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="18dp" android:layout_marginHorizontal="1dp" android:background="#FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="6dp"  android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="22dp" android:layout_marginHorizontal="1dp" android:background="#FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="12dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="18dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="26dp" android:layout_marginHorizontal="1dp" android:background="#FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="10dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="16dp" android:layout_marginHorizontal="1dp" android:background="#FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="8dp"  android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+            <View android:layout_width="2dp" android:layout_height="20dp" android:layout_marginHorizontal="1dp" android:background="#80FFFFFF"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Nút xóa audio block -->
+    <ImageButton
+        android:id="@+id/btn_delete_audio"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_trash_bin"
+        android:padding="4dp"
+        android:contentDescription="Xóa audio" />
+
+</LinearLayout>

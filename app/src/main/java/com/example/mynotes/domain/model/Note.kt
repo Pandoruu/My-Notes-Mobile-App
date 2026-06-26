@@ -15,6 +15,7 @@ data class Note(
     val isTrashed: Boolean = false,
     val trashedAt: Date? = null,
     val createdAt: Date = Date(),
-    val updatedAt: Date = Date()
+    val updatedAt: Date = Date(),
+    val contentBlocks: List<NoteBlock> = emptyList()
 )
 

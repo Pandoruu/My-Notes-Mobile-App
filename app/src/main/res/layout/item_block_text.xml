@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_block_text.xml – EditText cho TextBlock -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_text_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:textSize="16sp"
+        android:paddingVertical="4dp"
+        android:paddingHorizontal="16dp"
+        android:inputType="textMultiLine|textCapSentences"
+        android:imeOptions="flagNoEnterAction"
+        android:gravity="start|top"
+        android:minHeight="40dp"
+        android:hint="Nhập nội dung..."
+        android:textColorHint="#66FFFFFF"
+        android:textColor="?android:attr/textColorPrimary" />
+
+</LinearLayout>
