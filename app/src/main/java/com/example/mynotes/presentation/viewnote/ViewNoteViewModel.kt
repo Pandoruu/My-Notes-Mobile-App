@@ -37,10 +37,10 @@ class ViewNoteViewModel(
             if (userId == null) MutableLiveData(emptyList()) else observeCategoriesUseCase(userId)
         }
 
-    fun addNote(categoryId: Int?, title: String, detail: String?) {
+    fun addNote(categoryId: Int?, title: String, detail: String?, contentBlocks: List<com.example.mynotes.domain.model.NoteBlock> = emptyList()) {
         viewModelScope.launch {
             val userId = currentUserIdFlow.first() ?: return@launch
-            addNoteUseCase(userId, categoryId, title, detail)
+            addNoteUseCase(userId, categoryId, title, detail, contentBlocks)
         }
     }
 

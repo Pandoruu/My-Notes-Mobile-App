@@ -10,7 +10,7 @@ import com.example.mynotes.data.local.entity.User
 
 @Database(
     entities = [User::class, Category::class, Note::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

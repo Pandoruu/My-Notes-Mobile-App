@@ -1,6 +1,7 @@
 package com.example.mynotes.data.local.entity
 
 import androidx.room.*
+import com.example.mynotes.domain.model.NoteBlock
 import java.util.Date
 
 @Entity(
@@ -34,5 +35,6 @@ data class Note(
     @ColumnInfo(name = "is_trashed") val isTrashed: Boolean = false,
     @ColumnInfo(name = "trashed_at") val trashedAt: Date? = null,
     @ColumnInfo(name = "created_at") val createdAt: Date = Date(),
-    @ColumnInfo(name = "updated_at") val updatedAt: Date = Date()
+    @ColumnInfo(name = "updated_at") val updatedAt: Date = Date(),
+    @ColumnInfo(name = "content_blocks") val contentBlocks: List<NoteBlock> = emptyList()
 )

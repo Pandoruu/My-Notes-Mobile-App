@@ -13,8 +13,8 @@ class UpdateNoteUseCase(
             titlePlain = TextNormalizer.removeAccents(note.title),
             detailPlain = note.detail?.let { TextNormalizer.removeAccents(it) },
             updatedAt = Date()
+            // contentBlocks được giữ nguyên từ note.copy()
         )
         noteRepository.updateNote(updated)
     }
 }
-

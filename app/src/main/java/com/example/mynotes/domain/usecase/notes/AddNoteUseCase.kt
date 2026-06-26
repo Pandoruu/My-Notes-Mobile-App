@@ -1,6 +1,7 @@
 package com.example.mynotes.domain.usecase.notes
 
 import com.example.mynotes.domain.model.Note
+import com.example.mynotes.domain.model.NoteBlock
 import com.example.mynotes.domain.repository.NoteRepository
 import com.example.mynotes.domain.util.TextNormalizer
 import java.util.Date
@@ -8,7 +9,13 @@ import java.util.Date
 class AddNoteUseCase(
     private val noteRepository: NoteRepository
 ) {
-    suspend operator fun invoke(userId: Int, categoryId: Int?, title: String, detail: String?): Long {
+    suspend operator fun invoke(
+        userId: Int,
+        categoryId: Int?,
+        title: String,
+        detail: String?,
+        contentBlocks: List<NoteBlock> = emptyList()
+    ): Long {
         val now = Date()
         val note = Note(
             userId = userId,
@@ -18,9 +25,9 @@ class AddNoteUseCase(
             titlePlain = TextNormalizer.removeAccents(title),
             detailPlain = detail?.let { TextNormalizer.removeAccents(it) },
             createdAt = now,
-            updatedAt = now
+            updatedAt = now,
+            contentBlocks = contentBlocks
         )
         return noteRepository.addNote(note)
     }
 }
-

@@ -1,97 +1,322 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="?android:attr/colorBackground"
+    android:fitsSystemWindows="true">
 
+    <!-- Top bar -->
     <RelativeLayout
         android:id="@+id/topLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        >
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/btn_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:padding="16dp"
             android:scaleX="2"
             android:scaleY="2"
             android:layout_marginVertical="8dp"
-            android:src="@drawable/ic_back"
-            />
+            android:src="@drawable/ic_back" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_alignParentEnd="true"
-            >
+            android:layout_alignParentEnd="true">
+
             <ImageView
                 android:id="@+id/btn_trash_bin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:padding="16dp"
                 android:scaleX="1.5"
                 android:scaleY="1.5"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_trash_bin"
-                />
+                android:src="@drawable/ic_trash_bin" />
+
             <ImageView
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:padding="16dp"
                 android:scaleX="2"
                 android:scaleY="2"
                 android:layout_margin="8dp"
-                android:src="@drawable/ic_checkmark"
-                />
+                android:src="@drawable/ic_checkmark" />
         </LinearLayout>
     </RelativeLayout>
 
+    <!-- Category Spinner -->
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:entries="@array/Category"
         app:layout_constraintTop_toBottomOf="@+id/topLayout"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Title EditText -->
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/et_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Title"
-        android:textSize="20sp"
+        android:hint="Tieu de"
+        android:textSize="22sp"
+        android:textStyle="bold"
         android:background="@android:color/transparent"
         android:backgroundTint="@android:color/transparent"
-        android:focusable="true"
-        android:cursorVisible="true"
         android:paddingVertical="8dp"
         android:layout_margin="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"/>
-    <androidx.appcompat.widget.AppCompatEditText
-        android:id="@+id/et_detail"
+        app:layout_constraintTop_toBottomOf="@+id/spinner" />
+
+    <!-- RecyclerView: top=et_title, bottom=toolbarDivider -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_blocks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:hint="Start writing..."
-        android:textSize="18sp"
-        android:background="@android:color/transparent"
-        android:backgroundTint="@android:color/transparent"
-        android:focusable="true"
-        android:cursorVisible="true"
-        android:paddingVertical="8dp"
-        android:layout_margin="8dp"
         app:layout_constraintTop_toBottomOf="@+id/et_title"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:gravity="start"
-        android:overScrollMode="always"
-        android:scrollbars="none"/>
+        app:layout_constraintBottom_toTopOf="@+id/toolbarDivider"
+        android:clipToPadding="false"
+        android:paddingBottom="8dp"
+        android:overScrollMode="never" />
+
+    <!-- Divider (bottom=bottomToolbar) -->
+    <View
+        android:id="@+id/toolbarDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolbar" />
+
+    <!-- Bottom Toolbar (media) – hiện mặc định -->
+    <LinearLayout
+        android:id="@+id/bottomToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="?android:attr/colorBackground"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_add_audio"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/ic_mic"
+            app:tint="?android:attr/textColorPrimary"
+            android:padding="12dp"
+            android:contentDescription="Them audio" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_add_image"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/ic_image"
+            app:tint="?android:attr/textColorPrimary"
+            android:padding="12dp"
+            android:contentDescription="Them anh" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_add_checkbox"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/ic_check_box"
+            app:tint="?android:attr/textColorPrimary"
+            android:padding="12dp"
+            android:contentDescription="Them checkbox" />
+
+        <!-- Nút chuyển sang formatting toolbar -->
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/btn_show_formatting"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/ic_font_size"
+            app:tint="?android:attr/textColorPrimary"
+            android:padding="12dp"
+            android:contentDescription="Dinh dang van ban" />
+
+    </LinearLayout>
+
+    <!-- Formatting Toolbar – ẩn mặc định, hiện khi nhấn btn_show_formatting -->
+    <HorizontalScrollView
+        android:id="@+id/formattingToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:scrollbars="none"
+        android:background="?android:attr/colorBackground"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="4dp">
+
+            <!-- Nút quay lại media toolbar -->
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_back"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_back"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Quay lai" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_bold"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_bold"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="In dam" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_italic"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_italic"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="In nghieng" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_underline"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_underline"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Gach chan" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_bullet"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_list_bullet"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Danh sach bullet" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_numbered"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_list_numbered"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Danh sach so" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="24dp"
+                android:layout_marginHorizontal="4dp"
+                android:background="?android:attr/listDivider" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_align_left"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_align_left"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Can trai" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_align_center"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_align_center"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Can giua" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/btn_fmt_align_right"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:srcCompat="@drawable/ic_format_align_right"
+                app:tint="?android:attr/textColorPrimary"
+                android:padding="10dp"
+                android:contentDescription="Can phai" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <!-- Recording overlay -->
+    <LinearLayout
+        android:id="@+id/recordingOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:background="#CC000000"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/bottomToolbar">
+
+        <ImageView
+            android:id="@+id/iv_recording_dot"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/ic_mic_recording"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:id="@+id/tv_recording_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dang ghi am... 00:00"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/btn_stop_recording"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dung"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#F44336"
+            android:paddingHorizontal="16dp" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

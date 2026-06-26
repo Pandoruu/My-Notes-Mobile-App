@@ -89,4 +89,10 @@ dependencies {
 
     // DataStore
     implementation("androidx.datastore:datastore-preferences:1.1.1")
+
+    // Gson – serialize NoteBlock list to JSON
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Glide – load images in NoteBlockAdapter
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }

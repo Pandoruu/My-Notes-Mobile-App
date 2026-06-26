@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- item_block_checkbox.xml – CheckBox + EditText cho CheckboxBlock -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="2dp"
+    android:gravity="center_vertical">
+
+    <CheckBox
+        android:id="@+id/cb_checkbox_block"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="4dp" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_checkbox_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:textSize="16sp"
+        android:paddingVertical="4dp"
+        android:paddingEnd="16dp"
+        android:inputType="textMultiLine|textCapSentences"
+        android:imeOptions="flagNoEnterAction"
+        android:gravity="start|center_vertical"
+        android:minHeight="40dp"
+        android:textColor="?android:attr/textColorPrimary"
+        android:hint="Mục danh sách..." />
+
+</LinearLayout>
